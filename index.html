@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Todo List</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .todo-item {
+      margin-bottom: 5px;
+    }
+
+    .todo-item input[type="checkbox"] {
+      margin-right: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Todo List</h1>
+
+  <input type="text" id="taskInput" placeholder="Digite uma nova tarefa">
+  <button onclick="addTask()">Adicionar</button>
+
+  <div id="taskList"></div>
+
+  <script>
+    // Array para armazenar as tarefas
+    let tasks = [];
+
+    // Função para adicionar uma nova tarefa
+    function addTask() {
+      const taskInput = document.getElementById('taskInput');
+      const task = taskInput.value.trim();
+
+      if (task !== '') {
+        tasks.push(task);
+        renderTasks();
+        taskInput.value = '';
+      }
+    }
+
+    // Função para excluir uma tarefa
+    function deleteTask(index) {
+      tasks.splice(index, 1);
+      renderTasks();
+    }
+
+    // Função para renderizar as tarefas na página
+    function renderTasks() {
+      const taskList = document.getElementById('taskList');
+      taskList.innerHTML = '';
+
+      tasks.forEach((task, index) => {
+        const todoItem = document.createElement('div');
+        todoItem.className = 'todo-item';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.addEventListener('change', () => {
+          toggleTaskCompleted(index);
+        });
+
+        const taskText = document.createElement('span');
+        taskText.textContent = task;
+
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Excluir';
+        deleteButton.addEventListener('click', () => {
+          deleteTask(index);
+        });
+
+        todoItem.appendChild(checkbox);
+        todoItem.appendChild(taskText);
+        todoItem.appendChild(deleteButton);
+
+        taskList.appendChild(todoItem);
+      });
+    }
+
+    // Função para marcar ou desmarcar uma tarefa como concluída
+    function toggleTaskCompleted(index) {
+      // Adicione aqui a lógica para marcar ou desmarcar a tarefa como concluída
+      // Exemplo: tasks[index].completed = !tasks[index].completed;
+    }
+  </script>
+</body>
+</html>
