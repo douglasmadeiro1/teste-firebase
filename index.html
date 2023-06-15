@@ -24,9 +24,25 @@
 
   <div id="taskList"></div>
 
+  <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-firestore.js"></script>
   <script>
-    // Array para armazenar as tarefas
-    let tasks = [];
+    // Configurar as informações do seu projeto Firebase
+    const firebaseConfig = {
+      apiKey: 'SUA_API_KEY',
+      authDomain: 'SEU_AUTH_DOMAIN',
+      projectId: 'SEU_PROJECT_ID',
+      storageBucket: 'SEU_STORAGE_BUCKET',
+      messagingSenderId: 'SEU_SENDER_ID',
+      appId: 'SEU_APP_ID'
+    };
+
+    // Inicializar o Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    // Referenciar a coleção 'tasks' no Firestore
+    const db = firebase.firestore();
+    const tasksRef = db.collection('tasks');
 
     // Função para adicionar uma nova tarefa
     function addTask() {
@@ -34,16 +50,24 @@
       const task = taskInput.value.trim();
 
       if (task !== '') {
-        tasks.push(task);
-        renderTasks();
-        taskInput.value = '';
+        // Salvar a tarefa no Firestore
+        tasksRef.add({ description: task })
+          .then(() => {
+            taskInput.value = '';
+          })
+          .catch(error => {
+            console.error('Erro ao adicionar a tarefa:', error);
+          });
       }
     }
 
     // Função para excluir uma tarefa
-    function deleteTask(index) {
-      tasks.splice(index, 1);
-      renderTasks();
+    function deleteTask(id) {
+      // Excluir a tarefa do Firestore
+      tasksRef.doc(id).delete()
+        .catch(error => {
+          console.error('Erro ao excluir a tarefa:', error);
+        });
     }
 
     // Função para renderizar as tarefas na página
@@ -51,38 +75,51 @@
       const taskList = document.getElementById('taskList');
       taskList.innerHTML = '';
 
-      tasks.forEach((task, index) => {
-        const todoItem = document.createElement('div');
-        todoItem.className = 'todo-item';
+      // Obter as tarefas do Firestore
+      tasksRef.get()
+        .then(querySnapshot => {
+          querySnapshot.forEach(doc => {
+            const task = doc.data();
+            const id = doc.id;
 
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.addEventListener('change', () => {
-          toggleTaskCompleted(index);
+            const todoItem = document.createElement('div');
+            todoItem.className = 'todo-item';
+
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.addEventListener('change', () => {
+              toggleTaskCompleted(id);
+            });
+
+            const taskText = document.createElement('span');
+            taskText.textContent = task.description;
+
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Excluir';
+            deleteButton.addEventListener('click', () => {
+              deleteTask(id);
+            });
+
+            todoItem.appendChild(checkbox);
+            todoItem.appendChild(taskText);
+            todoItem.appendChild(deleteButton);
+
+            taskList.appendChild(todoItem);
+          });
+        })
+        .catch(error => {
+          console.error('Erro ao obter as tarefas:', error);
         });
-
-        const taskText = document.createElement('span');
-        taskText.textContent = task;
-
-        const deleteButton = document.createElement('button');
-        deleteButton.textContent = 'Excluir';
-        deleteButton.addEventListener('click', () => {
-          deleteTask(index);
-        });
-
-        todoItem.appendChild(checkbox);
-        todoItem.appendChild(taskText);
-        todoItem.appendChild(deleteButton);
-
-        taskList.appendChild(todoItem);
-      });
     }
 
     // Função para marcar ou desmarcar uma tarefa como concluída
-    function toggleTaskCompleted(index) {
-      // Adicione aqui a lógica para marcar ou desmarcar a tarefa como concluída
-      // Exemplo: tasks[index].completed = !tasks[index].completed;
+    function toggleTaskCompleted(id) {
+      // Adicione aqui a lógica para marcar ou desmarcar a tarefa como concluída no Firestore
+      // Exemplo: tasksRef.doc(id).update({ completed: newValue });
     }
+
+    // Renderizar as tarefas ao carregar a página
+    renderTasks();
   </script>
 </body>
 </html>
