@@ -68,7 +68,8 @@ select {
         grid-gap: 10px 10px;
         /* margem interna que afasta os elementos da borda do grid */
         padding: 30px 10px;
-        border-bottom: 1px solid #ddd;
+        border-bottom: 2px solid #696969;
+        border-top: 2px solid #696969;
          }
 
 .hide {
