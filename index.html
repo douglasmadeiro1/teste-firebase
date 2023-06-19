@@ -23,9 +23,20 @@
       <header>
         <h1>Lista de vendas</h1>
       </header>
-  <p>Adicionar uma venda</p>
-  <input type="text" id="taskInput" placeholder="Cliente e quantidade">
-  <button onclick="addTask()">Adicionar</button>
+
+      <form id="todo-form">
+        <p>Adicionar uma venda</p>
+        <div class="form-control">
+          <input
+            type="text"
+            id="taskInput"
+            placeholder="Nome do cliente e quantidade"
+          />
+          <button type="submit" id="add-todo-btn">
+          <i class="fa-thin fa-plus"></i>
+          </button>
+        </div>
+      </form>
 
   <div id="taskList"></div>
 
