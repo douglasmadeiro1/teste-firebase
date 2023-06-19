@@ -24,7 +24,7 @@
         <h1>Lista de vendas</h1>
       </header>
 
-      <form id="todo-form">
+
         <p>Adicionar uma venda</p>
         <div class="form-control">
           <input
@@ -32,11 +32,9 @@
             id="taskInput"
             placeholder="Nome do cliente e quantidade"
           />
-          <button type="submit" id="add-todo-btn">
-          <i class="fa-thin fa-plus"></i>
-          </button>
+          <button onclick="addTask()">Adicionar</button>
         </div>
-      </form>
+
 
   <div id="taskList"></div>
 
@@ -62,25 +60,29 @@
 
     // Função para adicionar uma nova tarefa
     function addTask() {
-      const taskInput = document.getElementById('taskInput');
-      const task = taskInput.value.trim();
+        const taskInput = document.getElementById('taskInput');
+        const task = taskInput.value.trim();
 
-      if (task !== '') {
-        // Salvar a tarefa no Firestore
-        tasksRef.add({ description: task })
-          .then(() => {
-            taskInput.value = '';
-          })
-          .catch(error => {
-            console.error('Erro ao adicionar a tarefa:', error);
-          });
-      }
+        if (task !== '') {
+          // Salvar a tarefa no Firestore
+          tasksRef.add({ description: task })
+            .then(() => {
+              taskInput.value = '';
+              renderTasks(); // Atualiza a lista de tarefas na tela
+            })
+            .catch(error => {
+              console.error('Erro ao adicionar a tarefa:', error);
+            });
+        }
     }
 
     // Função para excluir uma tarefa
     function deleteTask(id) {
       // Excluir a tarefa do Firestore
       tasksRef.doc(id).delete()
+      .then(() => {
+            renderTasks(); // Atualiza a lista de tarefas na tela
+          })
         .catch(error => {
           console.error('Erro ao excluir a tarefa:', error);
         });
