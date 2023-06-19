@@ -113,14 +113,21 @@
             taskText.textContent = task.description;
 
             const deleteButton = document.createElement('button');
-            deleteButton.textContent = 'Excluir';
+            deleteButton.innerHTML = `<i class="fa-solid fa-trash"></i>`;
             deleteButton.addEventListener('click', () => {
               deleteTask(id);
+            });
+
+            const editButton = document.createElement("button");
+            editButton.innerHTML = `<i class="fa-solid fa-pencil"></i>`;
+            editButton.addEventListener("click", () => {
+            editButton(todoElement.id, text);
             });
 
             todoItem.appendChild(checkbox);
             todoItem.appendChild(taskText);
             todoItem.appendChild(deleteButton);
+            todoItem.appendChild(editButton);
 
             taskList.appendChild(todoItem);
           });

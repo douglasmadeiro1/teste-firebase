@@ -54,6 +54,23 @@ select {
   padding: 0.25rem 0.5rem;
 }
 
+.taskList {
+        display: flex;
+      }
+
+      .todo-item {
+         display: grid;
+        /* aqui eu determino é são 3 colunas de tamanhos iguas, cada coluna tem uma fração */
+        grid-template-columns: repeat(4, 1fr);
+        /* esssa é a altura das linhas, se vc quiser pode apaga-la caso não queira uma altura definida */
+        grid-auto-rows: 25px;
+        /* espaço entre um elemento interno e outro */
+        grid-gap: 10px 10px;
+        /* margem interna que afasta os elementos da borda do grid */
+        padding: 30px 10px;
+        border-bottom: 1px solid #ddd;
+         }
+
 .hide {
   display: none;
 }
